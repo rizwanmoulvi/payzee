@@ -1,0 +1,85 @@
+
+
+# Python
+backend/.env
+backend/.env.*
+backend/stellar_pay.db
+backend/__pycache__/
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.vscode/
+backend/.DS_Store
+
+.git
+
+# Node/JS/TS
+**/node_modules/
+**/bun.lockb
+**/dist/
+**/build/
+**/.next/
+**/.turbo/
+**/.parcel-cache/
+**/.eslintcache
+**/.DS_Store
+
+# React/Vite
+**/dashboard/.env
+**/dashboard/.env.*
+**/dashboard/node_modules/
+**/dashboard/dist/
+**/dashboard/build/
+**/dashboard/.DS_Store
+dashboard/node_modules
+
+# Extension
+**/extension/node_modules/
+**/extension/dist/
+**/extension/build/
+**/extension/.DS_Store
+
+# Soroban
+soroban-escrow/target/
+soroban-escrow/.DS_Store
+
+# General
+.DS_Store
+.env
+.env.*
+*.log
+*.sqlite3
+*.pyc
+*.pyo
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
+
+# VSCode
+.vscode/
+.github/
+.venv/
+
+# Mac
+Icon?
+
+# Test outputs
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+
+# Ignore deployment artifacts
+soroban-escrow/deployment.json
+
+# Ignore coverage
+coverage/
+*.cover
+*.coverage
+
+# Ignore local test scripts
+backend/test_e2e_auto.py
+backend/test_event_detection.py
+backend/test_webhook_flow.py
+
+
