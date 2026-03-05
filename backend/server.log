@@ -1,0 +1,14 @@
+INFO:     Started server process [62553]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51821 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51824 - "POST /api/v1/cards/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51826 - "GET /api/v1/cards/84ee3561-b3a0-4912-a2b3-02323778b904 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51829 - "POST /api/v1/cards/84ee3561-b3a0-4912-a2b3-02323778b904/simulate/authorize HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51831 - "POST /api/v1/cards/84ee3561-b3a0-4912-a2b3-02323778b904/simulate/clear HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:51956 - "POST /api/v1/cards/84ee3561-b3a0-4912-a2b3-02323778b904/simulate/clear HTTP/1.1" 500 Internal Server Error
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [62553]
