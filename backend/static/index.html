@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>payzee - Card Testing Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            color: #721c24;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            color: #0c5460;
+            font-size: 14px;
+        }
+
+        .card-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            margin-top: 15px;
+            min-height: 150px;
+            display: none;
+        }
+
+        .card-display.active {
+            display: block;
+        }
+
+        .card-number {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            margin: 15px 0;
+        }
+
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 payzee</h1>
+            <p>Test Card Creation & Payment Flow</p>
+        </div>
+
+        <div class="grid">
+            <!-- Create Card -->
+            <div class="card">
+                <h2>1️⃣ Create Card</h2>
+                <form id="createCardForm">
+                    <div class="form-group">
+                        <label>Stellar Transaction ID</label>
+                        <input type="text" id="stellar_tx_id" placeholder="stellar-tx-12345" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount (cents)</label>
+                        <input type="number" id="amount_cents" placeholder="5000" value="5000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Merchant Name</label>
+                        <input type="text" id="merchant_name" placeholder="Coffee Shop" required>
+                    </div>
+                    <button type="submit">Create SINGLE_USE Card</button>
+                </form>
+                <div id="createResult" class="result" style="display: none;"></div>
+                <div id="cardDisplay" class="card-display">
+                    <div>💳 SINGLE_USE Card</div>
+                    <div class="card-number" id="cardNumber">•••• •••• •••• ••••</div>
+                    <div class="card-details">
+                        <div>
+                            <div style="opacity: 0.8; font-size: 0.75rem;">EXPIRES</div>
+                            <div id="cardExpiry">--/--</div>
+                        </div>
+                        <div>
+                            <div style="opacity: 0.8; font-size: 0.75rem;">STATE</div>
+                            <div id="cardState">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Authorize Payment -->
+            <div class="card">
+                <h2>2️⃣ Authorize Payment</h2>
+                <div class="info">
+                    ℹ️ First create a card, then use its ID to authorize
+                </div>
+                <form id="authorizeForm">
+                    <div class="form-group">
+                        <label>Card ID</label>
+                        <input type="text" id="auth_card_id" placeholder="Paste card ID from creation" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount (cents)</label>
+                        <input type="number" id="auth_amount" placeholder="5000" value="5000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Merchant Descriptor</label>
+                        <input type="text" id="auth_descriptor" placeholder="COFFEE SHOP NYC" required>
+                    </div>
+                    <div class="form-group">
+                        <label>MCC (Merchant Category)</label>
+                        <select id="auth_mcc">
+                            <option value="5812">5812 - Restaurants</option>
+                            <option value="5814">5814 - Fast Food</option>
+                            <option value="5411">5411 - Grocery</option>
+                            <option value="5999">5999 - Miscellaneous</option>
+                            <option value="7011">7011 - Hotels</option>
+                        </select>
+                    </div>
+                    <button type="submit">Authorize Transaction</button>
+                </form>
+                <div id="authorizeResult" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- Clear Payment -->
+            <div class="card">
+                <h2>3️⃣ Clear Payment</h2>
+                <div class="info">
+                    ℹ️ After authorization, clear the transaction to complete payment
+                </div>
+                <form id="clearForm">
+                    <div class="form-group">
+                        <label>Card ID</label>
+                        <input type="text" id="clear_card_id" placeholder="Same card ID from step 1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount (cents)</label>
+                        <input type="number" id="clear_amount" placeholder="5000" value="5000" required>
+                    </div>
+                    <button type="submit">Clear Transaction</button>
+                </form>
+                <div id="clearResult" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- View Card Details -->
+            <div class="card">
+                <h2>4️⃣ View Card Details</h2>
+                <form id="viewCardForm">
+                    <div class="form-group">
+                        <label>Card ID</label>
+                        <input type="text" id="view_card_id" placeholder="Paste card ID" required>
+                    </div>
+                    <button type="submit">Get Card Details</button>
+                </form>
+                <div id="viewResult" class="result" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:8000';
+        const API_KEY = 'sk_stellar_pay_dev_b03352ef1d68164c675023b82538ea3d1d1902f69bc408b7';
+
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const options = {
+                method,
+                headers: {
+                    'X-API-Key': API_KEY,
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+
+            const response = await fetch(`${API_BASE}${endpoint}`, options);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.detail || 'Request failed');
+            }
+
+            return data;
+        }
+
+        function showResult(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            
+            if (isError) {
+                element.className = 'result error';
+            } else {
+                element.className = 'result success';
+            }
+        }
+
+        // Create Card
+        document.getElementById('createCardForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Creating...';
+
+            try {
+                const data = await apiCall('/api/v1/cards/create', 'POST', {
+                    stellar_transaction_id: document.getElementById('stellar_tx_id').value,
+                    amount_cents: parseInt(document.getElementById('amount_cents').value),
+                    merchant_name: document.getElementById('merchant_name').value
+                });
+
+                showResult('createResult', data);
+
+                // Display card
+                const cardDisplay = document.getElementById('cardDisplay');
+                document.getElementById('cardNumber').textContent = `•••• •••• •••• ${data.card.last_four}`;
+                document.getElementById('cardExpiry').textContent = `${data.card.exp_month}/${data.card.exp_year}`;
+                document.getElementById('cardState').textContent = data.card.state;
+                cardDisplay.classList.add('active');
+
+                // Auto-fill other forms
+                document.getElementById('auth_card_id').value = data.id;
+                document.getElementById('clear_card_id').value = data.id;
+                document.getElementById('view_card_id').value = data.id;
+
+            } catch (error) {
+                showResult('createResult', { error: error.message }, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Create SINGLE_USE Card';
+            }
+        });
+
+        // Authorize
+        document.getElementById('authorizeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Authorizing...';
+
+            try {
+                const cardId = document.getElementById('auth_card_id').value;
+                const data = await apiCall(`/api/v1/cards/${cardId}/simulate/authorize`, 'POST', {
+                    amount_cents: parseInt(document.getElementById('auth_amount').value),
+                    descriptor: document.getElementById('auth_descriptor').value,
+                    mcc: document.getElementById('auth_mcc').value
+                });
+
+                showResult('authorizeResult', data);
+            } catch (error) {
+                showResult('authorizeResult', { error: error.message }, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Authorize Transaction';
+            }
+        });
+
+        // Clear
+        document.getElementById('clearForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Clearing...';
+
+            try {
+                const cardId = document.getElementById('clear_card_id').value;
+                const data = await apiCall(`/api/v1/cards/${cardId}/simulate/clear`, 'POST', {
+                    amount_cents: parseInt(document.getElementById('clear_amount').value)
+                });
+
+                showResult('clearResult', data);
+            } catch (error) {
+                showResult('clearResult', { error: error.message }, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Clear Transaction';
+            }
+        });
+
+        // View Card
+        document.getElementById('viewCardForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Loading...';
+
+            try {
+                const cardId = document.getElementById('view_card_id').value;
+                const data = await apiCall(`/api/v1/cards/${cardId}`);
+                showResult('viewResult', data);
+            } catch (error) {
+                showResult('viewResult', { error: error.message }, true);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Get Card Details';
+            }
+        });
+
+        // Generate random transaction ID on page load
+        document.getElementById('stellar_tx_id').value = `stellar-tx-${Date.now()}`;
+    </script>
+</body>
+</html>
